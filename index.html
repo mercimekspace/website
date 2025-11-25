@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mercimek Space — Ankara Hackerspace</title>
+  <style>
+    :root {
+      --bg: #f8f8f5;
+      --panel: #ffffff;
+      --ink: #111111;
+      --muted: #5a5a5a;
+      --accent: #e53935;
+      --stroke: rgba(17, 17, 17, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace;
+      background: radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.05), transparent 25%), var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 18px;
+    }
+
+    .brand img {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--stroke);
+      box-shadow: 0 8px 22px rgba(17, 17, 17, 0.12);
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid var(--stroke);
+      padding: 7px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    nav a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(17, 17, 17, 0.18);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ascii-card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 38px rgba(17, 17, 17, 0.06);
+      width: min(460px, 100%);
+      transform-origin: center;
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .ascii-card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    #ascii-logo {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.1;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(229, 57, 53, 0.35);
+      white-space: pre;
+      user-select: none;
+    }
+
+    #ascii-logo.glow {
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow:
+          0 0 10px rgba(229, 57, 53, 0.35),
+          0 0 22px rgba(229, 57, 53, 0.12);
+      }
+      to {
+        text-shadow:
+          0 0 18px rgba(229, 57, 53, 0.55),
+          0 0 32px rgba(229, 57, 53, 0.22);
+      }
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--stroke);
+      box-shadow: 0 14px 40px rgba(17, 17, 17, 0.1);
+      justify-self: center;
+      background: var(--panel);
+    }
+
+    .hero-image img {
+      width: 100%;
+      display: block;
+    }
+
+    .intro h1 {
+      margin: 0 0 12px;
+      font-size: clamp(24px, 4vw, 32px);
+      letter-spacing: 0.02em;
+    }
+
+    .intro p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      max-width: 560px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .cta-row a {
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--accent);
+      color: #ffffff;
+      background: var(--accent);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 8px 18px rgba(229, 57, 53, 0.2);
+    }
+
+    .cta-row a.secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--stroke);
+      box-shadow: none;
+    }
+
+    .cta-row a:hover {
+      transform: translateY(-1px);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 10px 26px rgba(17, 17, 17, 0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 16px;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 44px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img src="assets/ankara.jpg" alt="Ankara metro cube logo">
+        <span>Mercimek Space</span>
+      </div>
+      <nav>
+        <a href="#about">about</a>
+        <a href="#manifesto">manifesto</a>
+        <a href="#logistics">logistics</a>
+        <a href="#events">events</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="logo-stack">
+          <div class="ascii-card" id="ascii-card">
+            <pre id="ascii-logo" aria-label="ASCII metro cube"></pre>
+          </div>
+          <div class="intro">
+            <h1>Hackerspace Ankara never asked for, but definitely needed.</h1>
+            <p>Mercimek Space is a tiny, stubborn lab for builders, breakers, and the quietly curious. We solder, paint, code, and argue over good coffee. Doors open soon — bring your own weird.</p>
+            <div class="cta-row">
+              <a href="#contact">ping us</a>
+              <a class="secondary" href="#events">see events</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="assets/ankara.jpg" alt="Ankara metro cube on the pole against blue sky">
+        </div>
+      </section>
+
+      <section class="cards" id="about">
+        <div class="card">
+          <h3>What is this?</h3>
+          <p>A hackerspace in Ankara built for experimentation: code, synths, radios, solder fumes, and mercimek soup.</p>
+          <ul>
+            <li>Collaborative bench space &amp; power everywhere</li>
+            <li>3D printer, soldering stations, test gear (TBA)</li>
+            <li>Fast internet, whiteboards, stacks of stickers</li>
+          </ul>
+        </div>
+        <div class="card" id="manifesto">
+          <h3>Mini manifesto</h3>
+          <p>Break things, fix them, break them again. Chaos is the workshop. Curiosity beats perfection.</p>
+          <ul>
+            <li>Make loud art &amp; quiet tools</li>
+            <li>Teach what you just learned</li>
+            <li>Respect the space, not the rules</li>
+          </ul>
+        </div>
+        <div class="card" id="logistics">
+          <h3>Logistics</h3>
+          <ul>
+            <li>Location: Kızılay / Kolej, Ankara (final address TBA)</li>
+            <li>Open nights: weekly build night (prototype Thursdays)</li>
+            <li>Access: membership details coming; guests welcome with a host</li>
+            <li>Safety: respect the soldering stations; no sitting on the table</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="cards" id="events">
+        <div class="card">
+          <h3>Events &amp; workshops</h3>
+          <ul>
+            <li>Intro to soldering / blinking things (pilot)</li>
+            <li>Broken-gear clinic — bring something to fix</li>
+            <li>Analog night: radios, cassette decks, CRT experiments</li>
+            <li>Open desk for your own meetup (pitch it!)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Join &amp; contribute</h3>
+          <p>Want to bring a 3D printer, run a workshop, or donate a couch? Let's talk.</p>
+          <ul>
+            <li><a href="#contact">Volunteer / host an event</a></li>
+            <li>Suggest gear to buy or hack</li>
+            <li>Help with stickers, lights, and setting up power</li>
+          </ul>
+        </div>
+        <div class="card" id="contact">
+          <h3>Contact</h3>
+          <p>Placeholder links until launch.</p>
+          <ul>
+            <li><a href="mailto:hey@mercimek.space">hey@mercimek.space</a></li>
+            <li><a href="https://mercimek.space">mercimek.space</a> (coming soon)</li>
+            <li><a href="https://github.com/mercimek-space">github.com/mercimek-space</a> (placeholder)</li>
+            <li><a href="https://matrix.to/#/#mercimek:space">Matrix channel</a></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Built in Ankara. The hackerspace no one asked for — maybe that's the point.
+    </footer>
+  </div>
+
+  <script>
+    const asciiArt = [
+      "           11111111111",
+      "        110000000000011",
+      "      110111111111110011",
+      "     1101111001111100011",
+      "    11011110011111000011",
+      "    11011110011111000011",
+      "     1101111001111100011",
+      "      110111111111110011",
+      "        110000000000011",
+      "           11111111111"
+    ].join("\n");
+
+    const asciiLogo = document.getElementById("ascii-logo");
+    const asciiCard = document.getElementById("ascii-card");
+
+    function scrambledArt() {
+      return asciiArt.replace(/[01]/g, () => (Math.random() > 0.5 ? "0" : "1"));
+    }
+
+    function animateAscii() {
+      let ticks = 0;
+      asciiLogo.textContent = scrambledArt();
+      const scramble = setInterval(() => {
+        asciiLogo.textContent = scrambledArt();
+        ticks += 1;
+        if (ticks > 10) {
+          clearInterval(scramble);
+          asciiLogo.textContent = asciiArt;
+          asciiLogo.classList.add("glow");
+        }
+      }, 90);
+    }
+
+    window.addEventListener("load", () => {
+      asciiCard.classList.add("visible");
+      animateAscii();
+    });
+
+    asciiCard.addEventListener("click", animateAscii);
+  </script>
+</body>
+</html>
