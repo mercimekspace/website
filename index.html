@@ -26,35 +26,32 @@
             rgba(77, 208, 225, 0.04),
             transparent 30%
           ),
-          radial-gradient(
+        radial-gradient(
             circle at 80% 0%,
             rgba(113, 117, 255, 0.05),
             transparent 25%
           ),
-          var(--bg);
+        var(--bg);
         color: var(--text);
         font-family: "JetBrains Mono", "SFMono-Regular", "Fira Code", Menlo,
           Consolas, monospace;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2.5rem 2rem;
+        padding: 2.5rem 2rem 8vh;
       }
 
       .layout {
         width: min(1200px, 100%);
+        margin: 0 auto;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         gap: 1.5rem;
-        align-items: center;
-        min-height: 70vh;
+        align-items: start;
       }
 
       .column {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: stretch;
       }
 
@@ -208,6 +205,7 @@
         .layout {
           grid-template-columns: 1fr;
           justify-items: center;
+          align-items: start;
         }
 
         .column {
@@ -216,6 +214,12 @@
 
         .center {
           order: -1;
+        }
+      }
+
+      @media (min-width: 961px) {
+        .column {
+          margin-top: 25vh;
         }
       }
     </style>
@@ -316,22 +320,49 @@
 
     <script>
       (async () => {
-        const asciiContainer = document.getElementById("ascii");
+        const ascii = document.getElementById("ascii");
+
         const source = window.matchMedia("(max-width: 640px)").matches
           ? "assets/ascii-art-mobile.txt"
           : "assets/ascii-art-desktop.txt";
+
+        let repeatLine = "";
+
         try {
           const res = await fetch(source);
-          if (!res.ok) throw new Error("ASCII art missing");
+          if (!res.ok) throw new Error();
           const art = await res.text();
-          asciiContainer.textContent = art;
-        } catch (err) {
-          try {
-            const fallback = await fetch("assets/ascii-art.txt");
-            asciiContainer.textContent = await fallback.text();
-          } catch {
-            asciiContainer.textContent = "mercimek.space";
+
+          ascii.textContent = art;
+
+          const lines = art.replace(/\n$/, "").split("\n");
+          repeatLine = lines[lines.length - 1];
+        } catch {
+          ascii.textContent = "mercimek.space\n================";
+          repeatLine = "================";
+        }
+
+        const BATCH = 20;
+        let firstAppend = true;
+        const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+        function maybeExtend() {
+          if (
+            window.innerHeight + window.scrollY >
+            document.body.offsetHeight - 300
+          ) {
+            let i = 0;
+            do {
+              const prefix = firstAppend || !ascii.textContent ? "" : "\n";
+              ascii.textContent += prefix + repeatLine;
+              firstAppend = false;
+              i += 1;
+            } while (i < BATCH);
           }
+        }
+
+        if (!isMobile) {
+          window.addEventListener("scroll", maybeExtend);
         }
       })();
     </script>
