@@ -225,15 +225,15 @@
     </style>
   </head>
   <body>
-    <button class="lang-toggle" aria-label="Toggle language">
+    <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
       [EN] / [TR]
     </button>
 
     <main class="layout">
       <div class="column">
         <section class="card">
-          <h2>What is this?</h2>
-          <p>
+          <h2 id="what-title">What is this?</h2>
+          <p id="what-line">
             A
             <a
               class="tooltip"
@@ -242,11 +242,12 @@
               >hackerspace</a
             >
             in
-            <span class="tooltip" data-tip="39.9334° N, 32.8597° E">Ankara</span
+            <span class="tooltip" data-tip="39.9334° N, 32.8597° E"
+              ><u>Ankara</u></span
             >.
           </p>
           <br />
-          <p>
+          <p id="what-body">
             For a long time, we have been building things. We broke stuff, fixed
             it, broke it again, and called it <i>progress</i>. We have done all
             of this from apartments, cafes, and random corners of Ankara. It's
@@ -254,6 +255,7 @@
           </p>
           <p>
             <a
+              id="waitlist-link"
               href="https://forms.gle/z8V9UPBxftFMtskQ7"
               aria-label="Join the waitlist"
               >Join the waitlist here.</a
@@ -262,8 +264,8 @@
         </section>
 
         <section class="card">
-          <h2>Events &amp; workshops</h2>
-          <ul>
+          <h2 id="events-title">Events &amp; workshops</h2>
+          <ul id="events-list">
             <li>Weekly meetups soon!</li>
             <li>Share your projects and ideas.</li>
           </ul>
@@ -272,12 +274,13 @@
 
       <div class="center">
         <div class="hero">
-          <div class="eyebrow">Coming soon in 2026</div>
+          <div class="eyebrow" id="hero-eyebrow">Coming soon in 2026</div>
           <h1
             class="hero-title tooltip"
+            id="hero-title"
             data-tip="We love lentil soup. It's a gift from God."
           >
-            MERCIMEK
+            MERCİMEK
           </h1>
         </div>
         <pre class="ascii" id="ascii">Loading ASCII art...</pre>
@@ -285,35 +288,37 @@
 
       <div class="column">
         <section class="card">
-          <h2>Logistics</h2>
+          <h2 id="logistics-title">Logistics</h2>
           <ul>
-            <li>Location: Kızılay / Ankara</li>
-            <li>
-              Access: Membership required.
+            <li id="location-item">Location: Kızılay / Ankara</li>
+            <li id="access-item">
+              <span id="access-text">Access: Membership required.</span>
               <br />
-              <a href="https://forms.gle/z8V9UPBxftFMtskQ7"
+              <a id="access-link" href="https://forms.gle/z8V9UPBxftFMtskQ7"
                 >Join the waitlist here</a
               >.
             </li>
-            <li>Facilities: hella books (don't touch tho) &amp; couch</li>
+            <li id="facilities-item">
+              Facilities: hella books (don't touch tho) &amp; couch
+            </li>
           </ul>
         </section>
 
         <section class="card">
-          <h2>Contact</h2>
+          <h2 id="contact-title">Contact</h2>
           <ul>
             <li>
-              <a href="mailto:mercimekspace@protonmail.com"
+              <a id="email-link" href="mailto:mercimekspace@protonmail.com"
                 >mercimekspace@protonmail.com</a
               >
             </li>
             <li>
-              <a href="https://meetup.com/mercimekspace"
+              <a id="meetup-link" href="https://meetup.com/mercimekspace"
                 >meetup.com/mercimekspace</a
               >
             </li>
             <li>
-              <a href="https://github.com/mercimekspace"
+              <a id="github-link" href="https://github.com/mercimekspace"
                 >github.com/mercimekspace</a
               >
             </li>
@@ -325,7 +330,145 @@
     <script>
       (async () => {
         const ascii = document.getElementById("ascii");
+        const langToggle = document.getElementById("lang-toggle");
+        const heroEyebrow = document.getElementById("hero-eyebrow");
+        const heroTitle = document.getElementById("hero-title");
+        const whatTitle = document.getElementById("what-title");
+        const whatLine = document.getElementById("what-line");
+        const whatBody = document.getElementById("what-body");
+        const waitlistLink = document.getElementById("waitlist-link");
+        const eventsTitle = document.getElementById("events-title");
+        const eventsList = document.getElementById("events-list");
+        const logisticsTitle = document.getElementById("logistics-title");
+        const locationItem = document.getElementById("location-item");
+        const accessText = document.getElementById("access-text");
+        const accessLink = document.getElementById("access-link");
+        const facilitiesItem = document.getElementById("facilities-item");
+        const contactTitle = document.getElementById("contact-title");
+        const emailLink = document.getElementById("email-link");
+        const meetupLink = document.getElementById("meetup-link");
+        const githubLink = document.getElementById("github-link");
 
+        const fallbackTranslations = {
+          en: {
+            langLabel: "[EN] / [TR]",
+            heroEyebrow: "Coming soon in 2026",
+            heroTooltip: "We love mercimek corbasi. It's a gift from God.",
+            whatTitle: "What is this?",
+            whatLineTooltip:
+              "A shared workshop where people build, learn, and tinker together.",
+            ankaraCoords: "39.9334° N, 32.8597° E",
+            whatBody:
+              "For a long time, we have been building things. We broke stuff, fixed it, broke it again, and called it progress. We have done all of this from apartments, cafes, and random corners of Ankara. It's time to get together in this chaos.",
+            waitlistText: "Join the waitlist here.",
+            eventsTitle: "Events & workshops",
+            events: ["Weekly meetups soon!", "Share your projects and ideas."],
+            logisticsTitle: "Logistics",
+            location: "Location: Kızılay / Ankara",
+            access: "Access: Membership required.",
+            accessLink: "Join the waitlist here",
+            facilities: "Facilities: hella books (don't touch tho) & couch",
+            contactTitle: "Contact",
+            email: "mercimekspace@protonmail.com",
+            meetup: "meetup.com/mercimekspace",
+            github: "github.com/mercimekspace",
+          },
+          tr: {
+            langLabel: "[TR] / [EN]",
+            heroEyebrow: "2026'da yakında",
+            heroTooltip:
+              "Mercimek çorbasını seviyoruz. Tanrı'nın bir hediyesi.",
+            whatTitle: "Bu nedir?",
+            whatLineTooltip:
+              "İnsanların birlikte üretip öğrendiği ortak atölye.",
+            ankaraCoords: "39.9334° N, 32.8597° E",
+            whatBody:
+              "Uzun zamandır bir şeyler üretiyoruz. Kırdık, tamir ettik, yine kırdık ve buna ilerleme dedik. Tüm bunları Ankara'nın evlerinde, kafelerinde ve köşelerinde yaptık. Şimdi bu kaosta bir araya gelme zamanı.",
+            waitlistText: "Bekleme listesine buradan katıl.",
+            eventsTitle: "Etkinlikler & atölyeler",
+            events: [
+              "Haftalık buluşmalar yakında!",
+              "Projelerini ve fikirlerini paylaş.",
+            ],
+            logisticsTitle: "Lojistik",
+            location: "Konum: Kızılay / Ankara",
+            access: "Erişim: Üyelik gerekli.",
+            accessLink: "Bekleme listesine buradan katıl",
+            facilities: "İmkânlar: bir sürü kitap (dokunma) & kanepe",
+            contactTitle: "İletişim",
+            email: "mercimekspace@protonmail.com",
+            meetup: "meetup.com/mercimekspace",
+            github: "github.com/mercimekspace",
+          },
+        };
+
+        let translations = fallbackTranslations;
+        let currentLang = "en";
+
+        const renderWhatLine = (t) => {
+          let line = t.whatLineText || "";
+          line = line.replace(
+            /Ankara/,
+            `<span class="tooltip" data-tip="${t.ankaraCoords}"><u>Ankara</u></span>`,
+          );
+          line = line.replace(
+            /hackerspace/i,
+            `<a class="tooltip" href="https://www.urbandictionary.com/define.php?term=hackerspace" data-tip="${t.whatLineTooltip}">$&</a>`,
+          );
+          return line;
+        };
+
+        const applyLocale = (lang) => {
+          const t =
+            (translations && (translations[lang] || translations.en)) ||
+            fallbackTranslations.en;
+          currentLang = lang;
+          langToggle.textContent = t.langLabel;
+          heroEyebrow.textContent = t.heroEyebrow;
+          heroTitle.dataset.tip = t.heroTooltip;
+          whatTitle.textContent = t.whatTitle;
+          whatLine.innerHTML = renderWhatLine(t);
+          whatBody.textContent = t.whatBody;
+          waitlistLink.textContent = t.waitlistText;
+          eventsTitle.textContent = t.eventsTitle;
+          eventsList.innerHTML = "";
+          t.events.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            eventsList.appendChild(li);
+          });
+          logisticsTitle.textContent = t.logisticsTitle;
+          locationItem.textContent = t.location;
+          accessText.textContent = t.access;
+          accessLink.textContent = t.accessLink;
+          facilitiesItem.textContent = t.facilities;
+          contactTitle.textContent = t.contactTitle;
+          emailLink.textContent = t.email;
+          meetupLink.textContent = t.meetup;
+          githubLink.textContent = t.github;
+        };
+
+        const loadTranslations = async () => {
+          try {
+            const res = await fetch("assets/i18n.json");
+            if (res.ok) {
+              translations = await res.json();
+            }
+          } catch {
+            translations = fallbackTranslations;
+          } finally {
+            applyLocale("en");
+          }
+        };
+
+        langToggle.addEventListener("click", () => {
+          const next = currentLang === "en" ? "tr" : "en";
+          applyLocale(next);
+        });
+
+        await loadTranslations();
+
+        // ASCII loading + endless extension
         const source = window.matchMedia("(max-width: 640px)").matches
           ? "assets/ascii-art-mobile.txt"
           : "assets/ascii-art-desktop.txt";
