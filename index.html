@@ -60,6 +60,40 @@
         font-family: "JetBrains Mono", "SFMono-Regular", "Fira Code", Menlo,
           Consolas, monospace;
         padding: 2.5rem 2rem 8vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -25%;
+        background:
+          radial-gradient(
+            circle at 18% 32%,
+            rgba(255, 43, 43, 0.4),
+            transparent 36%
+          ),
+          radial-gradient(
+            circle at 72% 18%,
+            rgba(0, 0, 0, 0.6),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at 40% 72%,
+            rgba(255, 43, 43, 0.24),
+            transparent 42%
+          );
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(6px);
+        transform: scale(0.65) rotate(-8deg);
+        transition: opacity 0.3s ease;
+        z-index: 0;
+      }
+
+      .gradient-explode::before {
+        animation: gradient-burst 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
 
       .layout {
@@ -69,6 +103,8 @@
         grid-template-columns: 1fr auto 1fr;
         gap: 1.5rem;
         align-items: start;
+        position: relative;
+        z-index: 1;
       }
 
       .column {
@@ -163,8 +199,29 @@
         background: transparent;
         box-shadow: none;
         max-width: 100%;
-        overflow: auto;
         min-width: 320px;
+        position: relative;
+        overflow: visible;
+        isolation: isolate;
+      }
+
+      .ascii.exploding {
+        animation: ascii-flare 0.5s ease-in-out;
+      }
+
+      .ascii-shard {
+        position: absolute;
+        font: inherit;
+        color: inherit;
+        pointer-events: none;
+        animation: shard-launch 1s cubic-bezier(0.11, 0.8, 0.34, 1) forwards;
+        opacity: 0;
+        mix-blend-mode: screen;
+        display: inline-block;
+      }
+
+      .ascii-shard::after {
+        content: attr(data-char);
       }
 
       .tooltip {
@@ -218,11 +275,58 @@
         transition:
           background 0.2s ease,
           border-color 0.2s ease;
+        z-index: 2;
       }
 
       .lang-toggle:hover {
         background: rgba(77, 208, 225, 0.18);
         border-color: rgba(77, 208, 225, 0.5);
+      }
+
+      @keyframes gradient-burst {
+        0% {
+          opacity: 0.85;
+          transform: scale(0.55) rotate(-10deg);
+          filter: blur(8px);
+        }
+        45% {
+          opacity: 0.7;
+          transform: scale(1.1) rotate(6deg);
+          filter: blur(3px);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(2.6) rotate(20deg);
+          filter: blur(24px);
+        }
+      }
+
+      @keyframes shard-launch {
+        0% {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        65% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(var(--dx), var(--dy), 0)
+            rotate(var(--rot))
+            scale(1.4);
+        }
+      }
+
+      @keyframes ascii-flare {
+        0% {
+          filter: brightness(1);
+        }
+        40% {
+          filter: brightness(1.25);
+        }
+        100% {
+          filter: brightness(1);
+        }
       }
 
       @media (max-width: 960px) {
@@ -431,6 +535,73 @@
         let translations = fallbackTranslations;
         let currentLang = "en";
 
+        const triggerGradientExplosion = () => {
+          document.body.classList.remove("gradient-explode");
+          // Force reflow so repeated visits still retrigger the burst.
+          void document.body.offsetWidth;
+          requestAnimationFrame(() => {
+            document.body.classList.add("gradient-explode");
+          });
+        };
+
+        const measureCharSize = (el) => {
+          const probe = document.createElement("span");
+          probe.textContent = "M";
+          probe.style.visibility = "hidden";
+          probe.style.position = "absolute";
+          probe.style.pointerEvents = "none";
+          el.appendChild(probe);
+          const rect = probe.getBoundingClientRect();
+          el.removeChild(probe);
+          return { width: rect.width, height: rect.height };
+        };
+
+        const triggerAsciiExplosion = (target) => {
+          if (!target?.textContent) return;
+          const { width: cw, height: ch } = measureCharSize(target);
+          if (!cw || !ch) return;
+
+          const lines = target.textContent.split("\n");
+          const shards = [];
+          lines.forEach((line, row) => {
+            for (let col = 0; col < line.length; col += 1) {
+              const char = line[col];
+              if (char.trim() === "") continue;
+              shards.push({ char, row, col });
+            }
+          });
+
+          const limit = 220;
+          const pickChance = Math.min(1, limit / Math.max(1, shards.length));
+          const frag = document.createDocumentFragment();
+
+          shards.forEach((entry) => {
+            if (Math.random() > pickChance) return;
+            const shard = document.createElement("span");
+            shard.className = "ascii-shard";
+            shard.dataset.char = entry.char;
+            shard.style.left = `${entry.col * cw}px`;
+            shard.style.top = `${entry.row * ch}px`;
+            shard.style.setProperty("--dx", `${(Math.random() * 2 - 1) * 140}px`);
+            shard.style.setProperty(
+              "--dy",
+              `${(Math.random() * 1.7 - 0.35) * 160}px`,
+            );
+            shard.style.setProperty("--rot", `${(Math.random() * 60 - 30).toFixed(2)}deg`);
+            shard.style.animationDelay = `${Math.random() * 0.08}s`;
+            shard.setAttribute("aria-hidden", "true");
+            frag.appendChild(shard);
+          });
+
+          target.appendChild(frag);
+          target.classList.add("exploding");
+
+          setTimeout(() => target.classList.remove("exploding"), 650);
+          setTimeout(() => {
+            target.querySelectorAll(".ascii-shard").forEach((node) => node.remove());
+          }, 1400);
+        };
+
         const renderWhatLine = (t) => {
           let line = t.whatLineText || "";
           line = line.replace(
@@ -514,6 +685,9 @@
           ascii.textContent = "mercimek.space\n================";
           repeatLine = "================";
         }
+
+        triggerGradientExplosion();
+        triggerAsciiExplosion(ascii);
 
         const BATCH = 20;
         let firstAppend = true;
