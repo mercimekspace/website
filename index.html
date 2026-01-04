@@ -45,7 +45,8 @@
       body {
         margin: 0;
         min-height: 100vh;
-        background: radial-gradient(
+        background:
+          radial-gradient(
             circle at 20% 20%,
             rgba(77, 208, 225, 0.04),
             transparent 30%
@@ -57,8 +58,9 @@
           ),
           var(--bg);
         color: var(--text);
-        font-family: "JetBrains Mono", "SFMono-Regular", "Fira Code", Menlo,
-          Consolas, monospace;
+        font-family:
+          "JetBrains Mono", "SFMono-Regular", "Fira Code", Menlo, Consolas,
+          monospace;
         padding: 2.5rem 2rem 8vh;
         position: relative;
         overflow-x: hidden;
@@ -141,6 +143,11 @@
         line-height: 1.5;
         color: var(--muted);
         font-size: 0.95rem;
+      }
+
+      .card .inline-title {
+        color: var(--accent);
+        font-size: 0.85rem;
       }
 
       .card ul {
@@ -311,8 +318,7 @@
         }
         100% {
           opacity: 0;
-          transform: translate3d(var(--dx), var(--dy), 0)
-            rotate(var(--rot))
+          transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot))
             scale(1.4);
         }
       }
@@ -450,6 +456,13 @@
                 >github.com/mercimekspace</a
               >
             </li>
+
+            <br />
+            <div span class="inline-title">
+              <span id="founders-title">Founders:</span>
+              <a id="founder-link" href="https://github.com/orhun">@orhun</a>
+              <span id="founders-suffix">&amp; undisclosed</span>
+            </div>
           </ul>
         </section>
       </div>
@@ -476,6 +489,9 @@
         const emailLink = document.getElementById("email-link");
         const meetupLink = document.getElementById("meetup-link");
         const githubLink = document.getElementById("github-link");
+        const founderLink = document.getElementById("founder-link");
+        const foundersTitle = document.getElementById("founders-title");
+        const foundersSuffix = document.getElementById("founders-suffix");
 
         const fallbackTranslations = {
           en: {
@@ -501,6 +517,9 @@
             email: "mercimekspace@protonmail.com",
             meetup: "meetup.com/mercimekspace",
             github: "github.com/mercimekspace",
+            foundersTitle: "Founders:",
+            founderHandle: "@orhun",
+            foundersSuffix: "& undisclosed",
           },
           tr: {
             langLabel: "[TR] / [EN]",
@@ -529,6 +548,9 @@
             email: "mercimekspace@protonmail.com",
             meetup: "meetup.com/mercimekspace",
             github: "github.com/mercimekspace",
+            foundersTitle: "Founders:",
+            founderHandle: "@orhun",
+            foundersSuffix: "& undisclosed",
           },
         };
 
@@ -582,12 +604,18 @@
             shard.dataset.char = entry.char;
             shard.style.left = `${entry.col * cw}px`;
             shard.style.top = `${entry.row * ch}px`;
-            shard.style.setProperty("--dx", `${(Math.random() * 2 - 1) * 140}px`);
+            shard.style.setProperty(
+              "--dx",
+              `${(Math.random() * 2 - 1) * 140}px`,
+            );
             shard.style.setProperty(
               "--dy",
               `${(Math.random() * 1.7 - 0.35) * 160}px`,
             );
-            shard.style.setProperty("--rot", `${(Math.random() * 60 - 30).toFixed(2)}deg`);
+            shard.style.setProperty(
+              "--rot",
+              `${(Math.random() * 60 - 30).toFixed(2)}deg`,
+            );
             shard.style.animationDelay = `${Math.random() * 0.08}s`;
             shard.setAttribute("aria-hidden", "true");
             frag.appendChild(shard);
@@ -598,7 +626,9 @@
 
           setTimeout(() => target.classList.remove("exploding"), 650);
           setTimeout(() => {
-            target.querySelectorAll(".ascii-shard").forEach((node) => node.remove());
+            target
+              .querySelectorAll(".ascii-shard")
+              .forEach((node) => node.remove());
           }, 1400);
         };
 
@@ -643,6 +673,9 @@
           emailLink.textContent = t.email;
           meetupLink.textContent = t.meetup;
           githubLink.textContent = t.github;
+          founderLink.textContent = t.founderHandle;
+          foundersTitle.textContent = t.foundersTitle;
+          foundersSuffix.textContent = t.foundersSuffix;
         };
 
         const loadTranslations = async () => {

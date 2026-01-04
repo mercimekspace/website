@@ -19,7 +19,10 @@
     "contactTitle": "Contact",
     "email": "mercimekspace@protonmail.com",
     "meetup": "meetup.com/mercimekspace",
-    "github": "github.com/mercimekspace"
+    "github": "github.com/mercimekspace",
+    "foundersTitle": "Founders:",
+    "founderHandle": "@orhun",
+    "foundersSuffix": "& undisclosed"
   },
   "tr": {
     "langLabel": "[TR] / [EN]",
@@ -44,6 +47,9 @@
     "contactTitle": "İletİşİm",
     "email": "mercimekspace@protonmail.com",
     "meetup": "meetup.com/mercimekspace",
-    "github": "github.com/mercimekspace"
+    "github": "github.com/mercimekspace",
+    "foundersTitle": "Kurucular:",
+    "founderHandle": "@orhun",
+    "foundersSuffix": "& undisclosed"
   }
 }
