@@ -177,14 +177,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.35rem;
-      }
-
-      .eyebrow {
-        color: var(--accent);
-        font-size: 0.85rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
       }
 
       .hero-title {
@@ -387,28 +379,19 @@
             of this from apartments, cafes, and random corners of Ankara. It's
             time to get together in this chaos.
           </p>
-          <p>
-            <a
-              id="waitlist-link"
-              href="https://forms.gle/z8V9UPBxftFMtskQ7"
-              aria-label="Join the waitlist"
-              >Join the waitlist here.</a
-            >
-          </p>
         </section>
 
         <section class="card">
           <h2 id="events-title">Events &amp; workshops</h2>
           <ul id="events-list">
-            <li>Weekly meetups soon!</li>
-            <li>Share your projects and ideas.</li>
+            <li>Weekly meetups</li>
+            <li>Lentil soup workshop</li>
           </ul>
         </section>
       </div>
 
       <div class="center">
         <div class="hero">
-          <div class="eyebrow" id="hero-eyebrow">Coming soon in 2026</div>
           <h1
             class="hero-title tooltip"
             id="hero-title"
@@ -429,8 +412,8 @@
               <span id="access-text">Access: Membership required.</span>
               <br />
               <a id="access-link" href="https://forms.gle/z8V9UPBxftFMtskQ7"
-                >Join the waitlist here</a
-              >.
+                >Join us!</a
+              >
             </li>
             <li id="facilities-item">
               Facilities: hella books (don't touch tho) &amp; couch
@@ -442,11 +425,6 @@
           <h2 id="contact-title">Contact</h2>
           <ul>
             <li>
-              <a id="email-link" href="mailto:mercimekspace@protonmail.com"
-                >mercimekspace@protonmail.com</a
-              >
-            </li>
-            <li>
               <a id="meetup-link" href="https://meetup.com/mercimekspace"
                 >meetup.com/mercimekspace</a
               >
@@ -454,6 +432,12 @@
             <li>
               <a id="github-link" href="https://github.com/mercimekspace"
                 >github.com/mercimekspace</a
+              >
+            </li>
+
+            <li>
+              <a id="email-link" href="mailto:mercimekspace@protonmail.com"
+                >mercimekspace@protonmail.com</a
               >
             </li>
 
@@ -472,12 +456,10 @@
       (async () => {
         const ascii = document.getElementById("ascii");
         const langToggle = document.getElementById("lang-toggle");
-        const heroEyebrow = document.getElementById("hero-eyebrow");
         const heroTitle = document.getElementById("hero-title");
         const whatTitle = document.getElementById("what-title");
         const whatLine = document.getElementById("what-line");
         const whatBody = document.getElementById("what-body");
-        const waitlistLink = document.getElementById("waitlist-link");
         const eventsTitle = document.getElementById("events-title");
         const eventsList = document.getElementById("events-list");
         const logisticsTitle = document.getElementById("logistics-title");
@@ -496,7 +478,6 @@
         const fallbackTranslations = {
           en: {
             langLabel: "[EN] / [TR]",
-            heroEyebrow: "Coming soon in 2026",
             heroTooltip: "We love mercimek corbasi. It's a gift from God.",
             whatTitle: "What is this?",
             whatLineTooltip:
@@ -505,13 +486,12 @@
             whatLineText: "A hackerspace in Ankara.",
             whatBody:
               "For a long time, we have been building things. We broke stuff, fixed it, broke it again, and called it progress. We have done all of this from apartments, cafes, and random corners of Ankara. It's time to get together in this chaos.",
-            waitlistText: "Join the waitlist here.",
             eventsTitle: "Events & workshops",
-            events: ["Weekly meetups soon!", "Share your projects and ideas."],
+            events: ["Weekly meetups", "Lentil soup workshop"],
             logisticsTitle: "Logistics",
             location: "Location: Kızılay / Ankara",
             access: "Access: Membership required.",
-            accessLink: "Join the waitlist here",
+            accessLink: "Join us!",
             facilities: "Facilities: hella books (don't touch tho) & couch",
             contactTitle: "Contact",
             email: "mercimekspace@protonmail.com",
@@ -523,7 +503,6 @@
           },
           tr: {
             langLabel: "[TR] / [EN]",
-            heroEyebrow: "2026'da açılıyoruz",
             heroTooltip:
               "Mercimek çorbasını seviyoruz. Allah'ın dünyaya bahşettiği en büyük nimetlerden.",
             whatTitle: "Bu nedİr?",
@@ -533,16 +512,12 @@
             whatLineText: "Ankara'da bir Hackerspace.",
             whatBody:
               "Uzun zamandır bir şeyler üretiyoruz. Bozduk, düzelttik, tekrar bozup tekrar tamir ettik ve buna ilerleme dedik. Tüm bunları Ankara'da evlerimizde, kafelerde ve köşe bucaklarda yaptık. Şimdi bu kaosta bir araya gelme zamanı.",
-            waitlistText: "Bekleme listesine katılın.",
             eventsTitle: "Etkİnlİkler",
-            events: [
-              "Haftalık buluşmalar yakında!",
-              "Projelerini ve fikirlerini paylaş.",
-            ],
+            events: ["Haftalık buluşmalar", "Mercimek çorbası workshop"],
             logisticsTitle: "Lojİstİk",
             location: "Konum: Kızılay / Ankara",
             access: "Erişim: Üyelik gerekli.",
-            accessLink: "Bekleme listesine katılın",
+            accessLink: "Bize katılın!",
             facilities: "İmkânlar: tonla kitap (ama dokunmayın) & kanepe",
             contactTitle: "İletİşİm",
             email: "mercimekspace@protonmail.com",
@@ -651,12 +626,10 @@
             fallbackTranslations.en;
           currentLang = lang;
           langToggle.textContent = t.langLabel;
-          heroEyebrow.textContent = t.heroEyebrow;
           heroTitle.dataset.tip = t.heroTooltip;
           whatTitle.textContent = t.whatTitle;
           whatLine.innerHTML = renderWhatLine(t);
           whatBody.textContent = t.whatBody;
-          waitlistLink.textContent = t.waitlistText;
           eventsTitle.textContent = t.eventsTitle;
           eventsList.innerHTML = "";
           t.events.forEach((item) => {
